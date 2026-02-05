@@ -241,7 +241,7 @@ async function saveEdit() {
 function initSortable() {
   new Sortable(list, {
     animation: 200,
-    handle: '.list-item',
+    handle: '.drag-handle',
     ghostClass: 'sortable-ghost',
     dragClass: 'sortable-drag',
     onEnd: async () => {
