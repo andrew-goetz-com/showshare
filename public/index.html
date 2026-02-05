@@ -6,8 +6,7 @@
   <title>ShowShare</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,35 +16,67 @@
       <p class="subtitle">What should we watch?</p>
     </header>
 
-    <div class="filter-section" id="filterSection"></div>
-
-    <div class="add-section">
-      <input type="text" id="titleInput" placeholder="Add a movie or show..." autocomplete="off">
-      <div class="type-toggle">
-        <button class="type-btn active" data-type="movie">🎬 Movie</button>
-        <button class="type-btn" data-type="show">📺 Show</button>
-      </div>
-      <div class="person-toggle" id="personToggle"></div>
-      <button id="addBtn" class="add-btn">Add</button>
+    <div class="filter-bar">
+      <div class="filter-pills" id="filterSection"></div>
     </div>
 
     <ul id="list" class="list"></ul>
 
     <div class="empty-state" id="emptyState">
+      <div class="empty-glow"></div>
       <span class="empty-icon">🍿</span>
-      <p>No shows yet. Add something!</p>
+      <p>Your watchlist is empty</p>
+      <span class="empty-hint">Tap + to add something</span>
     </div>
   </div>
 
+  <!-- Floating Add Button -->
+  <button class="fab" id="fabBtn">
+    <span class="fab-icon">+</span>
+  </button>
+
+  <!-- Add Modal -->
+  <div class="modal" id="addModal">
+    <div class="modal-content add-modal-content">
+      <div class="modal-header">
+        <h2>Add to Watchlist</h2>
+        <button class="close-btn" id="closeAddModal">&times;</button>
+      </div>
+      <input type="text" id="titleInput" placeholder="Movie or show name..." autocomplete="off">
+      <div class="option-group">
+        <label class="option-label">Type</label>
+        <div class="type-toggle">
+          <button class="type-btn active" data-type="movie">🎬 Movie</button>
+          <button class="type-btn" data-type="show">📺 Show</button>
+        </div>
+      </div>
+      <div class="option-group">
+        <label class="option-label">Added by</label>
+        <div class="person-toggle" id="personToggle"></div>
+      </div>
+      <button id="addBtn" class="add-btn">Add to List</button>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
   <div class="modal" id="editModal">
     <div class="modal-content">
-      <h2>Edit</h2>
-      <input type="text" id="editInput" placeholder="Title">
-      <div class="type-toggle">
-        <button class="type-btn" data-type="movie" id="editMovie">🎬 Movie</button>
-        <button class="type-btn" data-type="show" id="editShow">📺 Show</button>
+      <div class="modal-header">
+        <h2>Edit</h2>
+        <button class="close-btn" id="closeEditModal">&times;</button>
       </div>
-      <div class="person-toggle modal-person" id="editPersonToggle"></div>
+      <input type="text" id="editInput" placeholder="Title">
+      <div class="option-group">
+        <label class="option-label">Type</label>
+        <div class="type-toggle">
+          <button class="type-btn" data-type="movie" id="editMovie">🎬 Movie</button>
+          <button class="type-btn" data-type="show" id="editShow">📺 Show</button>
+        </div>
+      </div>
+      <div class="option-group">
+        <label class="option-label">Added by</label>
+        <div class="person-toggle modal-person" id="editPersonToggle"></div>
+      </div>
       <div class="modal-actions">
         <button class="cancel-btn" id="cancelEdit">Cancel</button>
         <button class="save-btn" id="saveEdit">Save</button>

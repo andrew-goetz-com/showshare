@@ -1,30 +1,16 @@
 [
   {
-    "id": 1770299959446,
-    "title": "test",
-    "type": "movie",
-    "order": 2,
-    "addedBy": "Lia"
-  },
-  {
-    "id": 1770300039742,
-    "title": "test 2",
-    "type": "movie",
-    "order": 1,
-    "addedBy": "Andrew"
-  },
-  {
-    "id": 1770300119439,
-    "title": "zzz",
-    "type": "movie",
-    "order": 3,
-    "addedBy": "Lia"
-  },
-  {
-    "id": 1770300123252,
-    "title": "fdsafdsa",
+    "id": 1770300566098,
+    "title": "Prison Break",
     "type": "show",
-    "order": 4,
-    "addedBy": "Lia"
+    "addedBy": "Andrew",
+    "order": 1
+  },
+  {
+    "id": 1770300589794,
+    "title": "Hitchhikers guide to the galaxy",
+    "type": "movie",
+    "addedBy": "Andrew",
+    "order": 2
   }
 ]

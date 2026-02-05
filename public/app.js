@@ -16,13 +16,15 @@ const list = document.getElementById('list');
 const titleInput = document.getElementById('titleInput');
 const addBtn = document.getElementById('addBtn');
 const emptyState = document.getElementById('emptyState');
+const addModal = document.getElementById('addModal');
 const editModal = document.getElementById('editModal');
 const editInput = document.getElementById('editInput');
 const filterSection = document.getElementById('filterSection');
 const personToggle = document.getElementById('personToggle');
 const editPersonToggle = document.getElementById('editPersonToggle');
-const typeButtons = document.querySelectorAll('.add-section .type-btn');
-const editTypeButtons = document.querySelectorAll('.modal-content .type-btn');
+const fabBtn = document.getElementById('fabBtn');
+const addTypeButtons = document.querySelectorAll('#addModal .type-btn');
+const editTypeButtons = document.querySelectorAll('#editModal .type-btn');
 
 // Generate UI from PEOPLE array
 function initPeopleUI() {
@@ -34,12 +36,12 @@ function initPeopleUI() {
   
   // Add section person buttons
   personToggle.innerHTML = PEOPLE.map((p, i) => 
-    `<button class="person-btn${i === 0 ? ' active' : ''}" data-person="${p}">👤 ${p}</button>`
+    `<button class="person-btn${i === 0 ? ' active' : ''}" data-person="${p}">${p}</button>`
   ).join('');
   
   // Edit modal person buttons
   editPersonToggle.innerHTML = PEOPLE.map(p => 
-    `<button class="person-btn" data-person="${p}">👤 ${p}</button>`
+    `<button class="person-btn" data-person="${p}">${p}</button>`
   ).join('');
   
   // Attach event listeners
@@ -90,16 +92,18 @@ function render() {
     : items.filter(i => i.addedBy === currentFilter);
   
   emptyState.classList.toggle('hidden', filteredItems.length > 0);
+  list.classList.toggle('hidden', filteredItems.length === 0);
   
   list.innerHTML = filteredItems.map(item => `
     <li class="list-item" data-id="${item.id}">
-      <span class="drag-handle">☰</span>
+      <span class="drag-handle">⋮⋮</span>
       <span class="item-icon">${item.type === 'movie' ? '🎬' : '📺'}</span>
-      <div class="item-content" onclick="copyTitle('${escapeHtml(item.title).replace(/'/g, "\\'")}')"
->
+      <div class="item-content" onclick="copyTitle('${escapeHtml(item.title).replace(/'/g, "\\'")}')">
         <div class="item-title">${escapeHtml(item.title)}</div>
-        <div class="item-type">${item.type === 'movie' ? 'Movie' : 'TV Show'}</div>
-        <div class="item-person">Added by ${escapeHtml(item.addedBy || 'Unknown')}</div>
+        <div class="item-meta">
+          <span class="item-type">${item.type === 'movie' ? 'Movie' : 'Show'}</span>
+          <span class="item-person">${escapeHtml(item.addedBy || 'Unknown')}</span>
+        </div>
       </div>
       <div class="item-actions">
         <button class="action-btn edit" onclick="openEdit(${item.id})">✏️</button>
@@ -153,7 +157,30 @@ async function addItem() {
   });
   
   titleInput.value = '';
+  closeAddModal();
   fetchItems();
+}
+
+// Add Modal
+function openAddModal() {
+  addModal.classList.add('active');
+  fabBtn.classList.add('open');
+  
+  // Sync button UI with current selections
+  personToggle.querySelectorAll('.person-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.person === selectedPerson);
+  });
+  addTypeButtons.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.type === selectedType);
+  });
+  
+  titleInput.focus();
+}
+
+function closeAddModal() {
+  addModal.classList.remove('active');
+  fabBtn.classList.remove('open');
+  titleInput.value = '';
 }
 
 // Delete item
@@ -231,15 +258,23 @@ function initSortable() {
 }
 
 // Event listeners
+fabBtn.addEventListener('click', () => {
+  if (addModal.classList.contains('active')) {
+    closeAddModal();
+  } else {
+    openAddModal();
+  }
+});
+
 addBtn.addEventListener('click', addItem);
 
 titleInput.addEventListener('keypress', e => {
   if (e.key === 'Enter') addItem();
 });
 
-typeButtons.forEach(btn => {
+addTypeButtons.forEach(btn => {
   btn.addEventListener('click', () => {
-    typeButtons.forEach(b => b.classList.remove('active'));
+    addTypeButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     selectedType = btn.dataset.type;
   });
@@ -253,8 +288,14 @@ editTypeButtons.forEach(btn => {
   });
 });
 
+document.getElementById('closeAddModal').addEventListener('click', closeAddModal);
 document.getElementById('cancelEdit').addEventListener('click', closeEdit);
+document.getElementById('closeEditModal').addEventListener('click', closeEdit);
 document.getElementById('saveEdit').addEventListener('click', saveEdit);
+
+addModal.addEventListener('click', e => {
+  if (e.target === addModal) closeAddModal();
+});
 
 editModal.addEventListener('click', e => {
   if (e.target === editModal) closeEdit();
