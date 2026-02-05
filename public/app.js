@@ -1,11 +1,15 @@
 const API = '/api/items';
+
+// ✨ PEOPLE - Edit this array to change names
+const PEOPLE = ['Lia', 'Andrew'];
+
 let items = [];
 let selectedType = 'movie';
-let selectedPerson = 'Friend 1';
+let selectedPerson = PEOPLE[0];
 let currentFilter = 'all';
 let editingId = null;
 let editSelectedType = 'movie';
-let editSelectedPerson = 'Friend 1';
+let editSelectedPerson = PEOPLE[0];
 
 // Elements
 const list = document.getElementById('list');
@@ -14,11 +18,56 @@ const addBtn = document.getElementById('addBtn');
 const emptyState = document.getElementById('emptyState');
 const editModal = document.getElementById('editModal');
 const editInput = document.getElementById('editInput');
+const filterSection = document.getElementById('filterSection');
+const personToggle = document.getElementById('personToggle');
+const editPersonToggle = document.getElementById('editPersonToggle');
 const typeButtons = document.querySelectorAll('.add-section .type-btn');
 const editTypeButtons = document.querySelectorAll('.modal-content .type-btn');
-const personButtons = document.querySelectorAll('.add-section .person-btn');
-const editPersonButtons = document.querySelectorAll('.modal-content .person-btn');
-const filterButtons = document.querySelectorAll('.filter-btn');
+
+// Generate UI from PEOPLE array
+function initPeopleUI() {
+  // Filter buttons
+  filterSection.innerHTML = `
+    <button class="filter-btn active" data-filter="all">All</button>
+    ${PEOPLE.map(p => `<button class="filter-btn" data-filter="${p}">${p}</button>`).join('')}
+  `;
+  
+  // Add section person buttons
+  personToggle.innerHTML = PEOPLE.map((p, i) => 
+    `<button class="person-btn${i === 0 ? ' active' : ''}" data-person="${p}">👤 ${p}</button>`
+  ).join('');
+  
+  // Edit modal person buttons
+  editPersonToggle.innerHTML = PEOPLE.map(p => 
+    `<button class="person-btn" data-person="${p}">👤 ${p}</button>`
+  ).join('');
+  
+  // Attach event listeners
+  filterSection.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterSection.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      render();
+    });
+  });
+  
+  personToggle.querySelectorAll('.person-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      personToggle.querySelectorAll('.person-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedPerson = btn.dataset.person;
+    });
+  });
+  
+  editPersonToggle.querySelectorAll('.person-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      editPersonToggle.querySelectorAll('.person-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      editSelectedPerson = btn.dataset.person;
+    });
+  });
+}
 
 // Fetch items
 async function fetchItems() {
@@ -97,13 +146,13 @@ function openEdit(id) {
   editingId = id;
   editInput.value = item.title;
   editSelectedType = item.type;
-  editSelectedPerson = item.addedBy || 'Friend 1';
+  editSelectedPerson = item.addedBy || PEOPLE[0];
   
   editTypeButtons.forEach(btn => {
     btn.classList.toggle('active', btn.dataset.type === item.type);
   });
   
-  editPersonButtons.forEach(btn => {
+  editPersonToggle.querySelectorAll('.person-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.person === editSelectedPerson);
   });
   
@@ -173,31 +222,6 @@ editTypeButtons.forEach(btn => {
   });
 });
 
-personButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    personButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedPerson = btn.dataset.person;
-  });
-});
-
-editPersonButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    editPersonButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    editSelectedPerson = btn.dataset.person;
-  });
-});
-
-filterButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    filterButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    render();
-  });
-});
-
 document.getElementById('cancelEdit').addEventListener('click', closeEdit);
 document.getElementById('saveEdit').addEventListener('click', saveEdit);
 
@@ -213,4 +237,5 @@ editInput.addEventListener('keypress', e => {
 setInterval(fetchItems, 3000);
 
 // Initial load
+initPeopleUI();
 fetchItems();

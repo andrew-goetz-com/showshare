@@ -17,11 +17,7 @@
       <p class="subtitle">What should we watch?</p>
     </header>
 
-    <div class="filter-section">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="Friend 1">Friend 1</button>
-      <button class="filter-btn" data-filter="Friend 2">Friend 2</button>
-    </div>
+    <div class="filter-section" id="filterSection"></div>
 
     <div class="add-section">
       <input type="text" id="titleInput" placeholder="Add a movie or show..." autocomplete="off">
@@ -29,10 +25,7 @@
         <button class="type-btn active" data-type="movie">🎬 Movie</button>
         <button class="type-btn" data-type="show">📺 Show</button>
       </div>
-      <div class="person-toggle">
-        <button class="person-btn active" data-person="Friend 1">👤 Friend 1</button>
-        <button class="person-btn" data-person="Friend 2">👤 Friend 2</button>
-      </div>
+      <div class="person-toggle" id="personToggle"></div>
       <button id="addBtn" class="add-btn">Add</button>
     </div>
 
@@ -52,10 +45,7 @@
         <button class="type-btn" data-type="movie" id="editMovie">🎬 Movie</button>
         <button class="type-btn" data-type="show" id="editShow">📺 Show</button>
       </div>
-      <div class="person-toggle modal-person">
-        <button class="person-btn" data-person="Friend 1" id="editPerson1">👤 Friend 1</button>
-        <button class="person-btn" data-person="Friend 2" id="editPerson2">👤 Friend 2</button>
-      </div>
+      <div class="person-toggle modal-person" id="editPersonToggle"></div>
       <div class="modal-actions">
         <button class="cancel-btn" id="cancelEdit">Cancel</button>
         <button class="save-btn" id="saveEdit">Save</button>
