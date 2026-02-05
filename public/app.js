@@ -311,17 +311,12 @@ setInterval(fetchItems, 3000);
 // View raw JSON
 document.getElementById('viewJsonBtn').addEventListener('click', async () => {
   try {
+    // Fetch data FIRST before opening window to avoid race conditions
     const res = await fetch(API);
     const data = await res.json();
-    const jsonWindow = window.open('', '_blank', 'noopener,noreferrer');
     
-    // Check if window.open was successful
-    if (!jsonWindow) {
-      showToast('Please allow popups to view JSON');
-      return;
-    }
-    
-    // Create the document structure safely
+    // Create the complete HTML with JSON data embedded
+    const jsonString = JSON.stringify(data, null, 2);
     const html = `<!DOCTYPE html>
 <html>
 <head>
@@ -340,18 +335,21 @@ document.getElementById('viewJsonBtn').addEventListener('click', async () => {
     }
   </style>
 </head>
-<body><pre></pre></body>
+<body><pre>${jsonString.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre></body>
 </html>`;
+    
+    // Open window and write content immediately
+    const jsonWindow = window.open('', '_blank', 'noopener,noreferrer');
+    
+    // Check if window.open was successful
+    if (!jsonWindow) {
+      showToast('Please allow popups to view JSON');
+      return;
+    }
     
     jsonWindow.document.open();
     jsonWindow.document.write(html);
     jsonWindow.document.close();
-    
-    // Use textContent to safely insert JSON (prevents XSS)
-    const preElement = jsonWindow.document.querySelector('pre');
-    if (preElement) {
-      preElement.textContent = JSON.stringify(data, null, 2);
-    }
   } catch (err) {
     console.error('Failed to fetch JSON:', err);
     showToast('Failed to load JSON data');
