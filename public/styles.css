@@ -258,6 +258,11 @@ h1 {
 
 .item-content {
   flex: 1;
+  cursor: pointer;
+}
+
+.item-content:active {
+  opacity: 0.7;
 }
 
 .item-title {
@@ -422,4 +427,29 @@ h1 {
   h1 {
     font-size: 3rem;
   }
+}
+
+/* Toast notification */
+#toast {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  border: 1px solid var(--border);
+}
+
+#toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }

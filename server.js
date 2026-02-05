@@ -39,9 +39,13 @@ app.post('/api/items', (req, res) => {
     id: Date.now(),
     title: req.body.title,
     type: req.body.type || 'movie',
-    addedBy: req.body.addedBy || 'Friend 1',
+    addedBy: req.body.addedBy || 'Unknown',
     order: items.length + 1
   };
+  
+  // Debug log
+  console.log('Adding item:', newItem);
+  
   items.push(newItem);
   writeData(items);
   res.json(newItem);

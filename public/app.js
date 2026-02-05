@@ -69,11 +69,18 @@ function initPeopleUI() {
   });
 }
 
-// Fetch items
-async function fetchItems() {
+// Fetch items (only re-render if data changed)
+let lastDataHash = '';
+async function fetchItems(forceRender = false) {
   const res = await fetch(API);
-  items = await res.json();
-  render();
+  const newItems = await res.json();
+  const newHash = JSON.stringify(newItems);
+  
+  if (forceRender || newHash !== lastDataHash) {
+    lastDataHash = newHash;
+    items = newItems;
+    render();
+  }
 }
 
 // Render list
@@ -88,7 +95,8 @@ function render() {
     <li class="list-item" data-id="${item.id}">
       <span class="drag-handle">☰</span>
       <span class="item-icon">${item.type === 'movie' ? '🎬' : '📺'}</span>
-      <div class="item-content">
+      <div class="item-content" onclick="copyTitle('${escapeHtml(item.title).replace(/'/g, "\\'")}')"
+>
         <div class="item-title">${escapeHtml(item.title)}</div>
         <div class="item-type">${item.type === 'movie' ? 'Movie' : 'TV Show'}</div>
         <div class="item-person">Added by ${escapeHtml(item.addedBy || 'Unknown')}</div>
@@ -108,6 +116,29 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+// Copy title to clipboard
+async function copyTitle(title) {
+  try {
+    await navigator.clipboard.writeText(title);
+    showToast('Copied!');
+  } catch (err) {
+    console.error('Failed to copy:', err);
+  }
+}
+
+// Toast notification
+function showToast(message) {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1500);
 }
 
 // Add item
