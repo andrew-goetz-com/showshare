@@ -573,22 +573,27 @@ h1 {
 /* Footer */
 .footer {
   position: fixed;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 50;
+  bottom: 0;
+  left: 0;
+  right: 0;
   text-align: center;
+  padding: 12px;
+  background: transparent;
+  z-index: 50;
 }
 
 .footer-link {
+  background: none;
+  border: none;
   color: var(--text-tertiary);
-  text-decoration: none;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 400;
-  opacity: 0.5;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  transition: color 0.2s ease;
   padding: 4px 8px;
-  border-radius: 4px;
+  text-transform: lowercase;
+  letter-spacing: 0.3px;
+  opacity: 0.5;
 }
 
 .footer-link:hover {
