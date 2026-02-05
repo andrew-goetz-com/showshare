@@ -311,8 +311,11 @@ setInterval(fetchItems, 3000);
 // View raw JSON
 document.getElementById('viewJsonBtn').addEventListener('click', async () => {
   try {
+    // Fetch data FIRST before opening window to avoid race conditions
     const res = await fetch(API);
     const data = await res.json();
+    
+    // Open window after data is fetched
     const jsonWindow = window.open('', '_blank', 'noopener,noreferrer');
     
     // Check if window.open was successful
@@ -321,7 +324,7 @@ document.getElementById('viewJsonBtn').addEventListener('click', async () => {
       return;
     }
     
-    // Create the document structure safely
+    // Create the document structure
     const html = `<!DOCTYPE html>
 <html>
 <head>
