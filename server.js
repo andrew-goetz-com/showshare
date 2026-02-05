@@ -4,8 +4,15 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
-const DATA_FILE = path.join(__dirname, 'data.json');
+const PORT = parseInt(process.argv[2]) || parseInt(process.env.PORT) || 3000;
+
+// Determine storage file: use env var, command arg, or default based on NODE_ENV
+let storageFilename = process.env.DB_STORAGE_FILE || process.argv[3];
+if (!storageFilename) {
+  const isProductionMode = process.env.NODE_ENV === 'production';
+  storageFilename = isProductionMode ? 'data.json' : 'db-schema-example.json';
+}
+const DATA_FILE = path.join(__dirname, storageFilename);
 
 app.use(cors());
 app.use(express.json());
@@ -88,4 +95,5 @@ app.put('/api/reorder', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`✨ ShowShare running at http://localhost:${PORT}`);
+  console.log(`📁 Using database file: ${storageFilename}`);
 });
