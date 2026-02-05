@@ -570,6 +570,37 @@ h1 {
   transform: translateX(-50%) translateY(0);
 }
 
+/* Footer */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 12px;
+  background: transparent;
+  z-index: 50;
+}
+
+.footer-link {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: 10px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 4px 8px;
+  text-transform: lowercase;
+  letter-spacing: 0.3px;
+  opacity: 0.5;
+}
+
+.footer-link:hover {
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
 /* Mobile optimizations */
 @media (hover: none) {
   .item-actions {

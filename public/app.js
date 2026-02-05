@@ -308,6 +308,56 @@ editInput.addEventListener('keypress', e => {
 // Real-time polling (every 3 seconds)
 setInterval(fetchItems, 3000);
 
+// View raw JSON
+document.getElementById('viewJsonBtn').addEventListener('click', async () => {
+  try {
+    const res = await fetch(API);
+    const data = await res.json();
+    const jsonWindow = window.open('', '_blank', 'noopener,noreferrer');
+    
+    // Check if window.open was successful
+    if (!jsonWindow) {
+      showToast('Please allow popups to view JSON');
+      return;
+    }
+    
+    // Create the document structure safely
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+  <title>Raw JSON Data</title>
+  <style>
+    body { 
+      background: #1a1a1a; 
+      color: #fff; 
+      font-family: monospace; 
+      padding: 20px; 
+      margin: 0; 
+    } 
+    pre { 
+      white-space: pre-wrap; 
+      word-wrap: break-word; 
+    }
+  </style>
+</head>
+<body><pre></pre></body>
+</html>`;
+    
+    jsonWindow.document.open();
+    jsonWindow.document.write(html);
+    jsonWindow.document.close();
+    
+    // Use textContent to safely insert JSON (prevents XSS)
+    const preElement = jsonWindow.document.querySelector('pre');
+    if (preElement) {
+      preElement.textContent = JSON.stringify(data, null, 2);
+    }
+  } catch (err) {
+    console.error('Failed to fetch JSON:', err);
+    showToast('Failed to load JSON data');
+  }
+});
+
 // Initial load
 initPeopleUI();
 fetchItems();
