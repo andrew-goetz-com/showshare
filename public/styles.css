@@ -75,7 +75,6 @@ h1 {
   overflow-x: auto;
   padding: 4px 0;
   -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 .filter-pills::-webkit-scrollbar {
@@ -161,8 +160,8 @@ h1 {
   font-size: 12px;
   cursor: grab;
   touch-action: none;
-  user-select: none;
   -webkit-user-select: none;
+  user-select: none;
   padding: 4px;
   margin-left: -4px;
 }
@@ -340,8 +339,8 @@ h1 {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   display: flex;
   align-items: flex-end;
   justify-content: center;
