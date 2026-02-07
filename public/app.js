@@ -311,50 +311,32 @@ setInterval(fetchItems, 3000);
 // View raw JSON
 document.getElementById('viewJsonBtn').addEventListener('click', async () => {
   try {
-    // Fetch data FIRST before opening window to avoid race conditions
     const res = await fetch(API);
     const data = await res.json();
+    const jsonStr = JSON.stringify(data, null, 2)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
     
-    // Open window after data is fetched
-    const jsonWindow = window.open('', '_blank', 'noopener,noreferrer');
+    const jsonWindow = window.open('', '_blank');
     
-    // Check if window.open was successful
     if (!jsonWindow) {
       showToast('Please allow popups to view JSON');
       return;
     }
     
-    // Create the document structure
-    const html = `<!DOCTYPE html>
+    jsonWindow.document.write(`<!DOCTYPE html>
 <html>
 <head>
   <title>Raw JSON Data</title>
   <style>
-    body { 
-      background: #1a1a1a; 
-      color: #fff; 
-      font-family: monospace; 
-      padding: 20px; 
-      margin: 0; 
-    } 
-    pre { 
-      white-space: pre-wrap; 
-      word-wrap: break-word; 
-    }
+    body { background: #1a1a1a; color: #fff; font-family: monospace; padding: 20px; margin: 0; }
+    pre { white-space: pre-wrap; word-wrap: break-word; }
   </style>
 </head>
-<body><pre></pre></body>
-</html>`;
-    
-    jsonWindow.document.open();
-    jsonWindow.document.write(html);
+<body><pre>${jsonStr}</pre></body>
+</html>`);
     jsonWindow.document.close();
-    
-    // Use textContent to safely insert JSON (prevents XSS)
-    const preElement = jsonWindow.document.querySelector('pre');
-    if (preElement) {
-      preElement.textContent = JSON.stringify(data, null, 2);
-    }
   } catch (err) {
     console.error('Failed to fetch JSON:', err);
     showToast('Failed to load JSON data');
